@@ -1,8 +1,12 @@
-# Entwicklungsprüfung 0.1.0
+# Entwicklungsprüfung 0.2.0
 
 ## Ergebnis
 
 Das neue Repository hat eine gemeinsame RGB-D-Verarbeitung statt duplizierter Projektskripte. Numerik, Aufzeichnungsformat, Wiedergabe und Tracking sind automatisch geprüft. Kamera-, GUI-, ML-, Open3D- und ROS-Zugänge sind ausdrücklich getrennte Integrationsbereiche. Vollständige D435i-Funktionsabdeckung ist die Roadmap, nicht der behauptete Auslieferungszustand.
+
+## V1-Szeneninspektor
+
+Neu: stationäre Referenzkalibrierung, Objektcluster mit 3D-Nachbarschaftsgate, sichtbare Maße/Höhe, lokale IDs, Replay und Baseline-Vergleich. Dazu kommen gepaarte JSON-/NPZ-/Objekt-PLY-Ausgabe sowie ein Explorer-Modus. Eine geneigte synthetische Referenz und zwei Flächen in 12/18 cm Abstand dienen als numerischer Nachweis. Referenzverlust liefert keine veralteten Objektwerte. Kamerabewegung entlang der Ebene kann trotzdem unentdeckt bleiben; feste Montage ist erforderlich. UI-Grenztests ersetzen keine echte Desktopabnahme.
 
 ## Geprüfter Umfang
 

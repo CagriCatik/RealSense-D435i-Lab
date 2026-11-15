@@ -2,7 +2,7 @@
 
 Ein praktisches RGB-D-/IMU-Labor für Çağrı Çatık: Kamerafunktionen verstehen, Messungen nachvollziehen und daraus 3D-Wahrnehmungs- und Robotikprojekte entwickeln.
 
-**Version 0.1.0:** Ausführbare Python-Basis mit Demo, Kameraadapter, Wiedergabe, 3D Object Explorer, Messung, Punktwolkenexport, Ebenenerkennung, optionalem YOLO/Tracking, IMU-Aufnahme und optionaler TSDF-Fusion mit vorgegebenen Posen. ROS 2 bekommt einen eigenen Launch-Einstieg. SLAM, vollständige Objektvermessung und Navigation sind Ausbauprojekte; siehe [Funktionsmatrix](docs/capabilities.md).
+**Version 0.2.0:** Stationärer Szeneninspektor als erste zusammenhängende Anwendung: Referenzfläche kalibrieren, Objektflächen segmentieren, Positionen und sichtbare Ausdehnungen messen, Track-IDs anzeigen und gespeicherte Szenen vergleichen. Dazu bleiben Kameraadapter, Aufnahme/Wiedergabe, 3D Object Explorer, optionales YOLO, IMU und ROS-/TSDF-Einstiege verfügbar. Mobile Kartierung, vollständige Objektvermessung und Navigation sind Ausbauprojekte; siehe [Funktionsmatrix](docs/capabilities.md).
 
 **Prüfstand:** Die automatischen Kern- und Integrationstests laufen ohne Kamera. Die D435i, grafische Desktopfunktionen und optionalen ML-/ROS-/Open3D-Integrationen müssen an deiner Hardware abgenommen werden. Dieses Repository ist keine Herstellerzertifizierung.
 
@@ -48,6 +48,24 @@ rs-lab imu-report --input recordings/imu-001.csv
 
 Die vorgeschlagenen Profile werden vor dem Start als Kombination vom SDK auflösbar geprüft. Die Diagnose listet Einzelprofile; sie garantiert nicht, dass alle gemeinsam nutzbar sind. Kamera immer nur in einer Anwendung gleichzeitig öffnen.
 
+## V1: Stationärer Szeneninspektor
+
+```bash
+# Zwei synthetische Objektflächen auf einer geneigten Referenzfläche analysieren
+rs-lab scene --source demo --output recordings/scene-001 --export-cloud
+
+# Gespeicherte Szene analysieren und mit dem ersten Bericht vergleichen
+rs-lab scene --source replay --input recordings/scene-001 --baseline recordings/scene-001/scene_000000.json
+
+# Interaktive Segmentierung und Objektmaße: Demo oder feste D435i
+rs-lab view --scene --source demo
+rs-lab view --scene --source camera --scene-config configs/scene.json
+```
+
+Im Szenenmodus zeigt das dritte Panel Referenzfläche (grün), geometrische Objekte (farbig), andere Messpunkte (dunkel) und fehlende Tiefe (schwarz). `C` kalibriert die Referenz neu. `S` speichert zusammengehörige RGB-D-, JSON- und Objekt-PLY-Dateien. Position, sichtbare Flächenausdehnung und Höhe relativ zur Referenz erscheinen im Bericht; die Anzeige zeigt Track-ID, Ausdehnungen und Höhe.
+
+Die Kamera muss feststehen. Die Referenz ist eine vom Anwender ausgewählte dominante Fläche, kein automatisch bestätigter Boden. Die synthetische Demo enthält Flächen mit bekannten 12/18 cm Abstand zur Referenz; daraus folgt keine reale D435i-Genauigkeit. [Ablauf, Einstellungen und Grenzen](docs/scene-inspector.md)
+
 ## YOLO und räumliches Tracking
 
 ```bash
@@ -66,6 +84,7 @@ Das Modell muss lokal vorhanden sein. Es wird kein Modell automatisch herunterge
 | [Spezifikation](docs/specification.md) | Hardwaregrenzen, Revisionen und Messbedingungen |
 | [Architektur](docs/architecture.md) | Modulgrenzen, Einheiten und Datenfluss |
 | [CLI](docs/cli.md) | Befehle und Aufnahmeformate |
+| [Szeneninspektor](docs/scene-inspector.md) | Stationäre Anwendung, Aufnahmevergleich und Abnahme |
 | [Hardware-Abnahme](docs/hardware-validation.md) | Konkrete Prüfungen an deiner Kamera |
 | [Roadmap](docs/roadmap.md) | Ausbau bis Rekonstruktion, SLAM und Robotik |
 | [Offizielle Quellen](docs/sources.md) | Hersteller, SDK, ROS-Wrapper und Integrationen |

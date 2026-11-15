@@ -8,7 +8,7 @@ import time
 from .analysis import frame_health, summarize
 from .config import Config
 from .geometry import frame_cloud, frame_point
-from .sources import ReplaySource, SyntheticSource
+from .sources import ReplaySource, SyntheticSource, TabletopSource
 from .storage import save_frame, write_json, write_ply
 
 
@@ -24,6 +24,7 @@ def source_arguments(parser, count=300):
     parser.add_argument("--input", help="Replay directory/.npz or SDK recording")
     parser.add_argument("--config", help="Strict JSON config; see configs/")
     parser.add_argument("--frames", type=positive, default=count)
+    parser.add_argument("--demo-scene", choices=("box", "tabletop"), help="Synthetic scene (default depends on command)")
 
 
 def parser():
@@ -38,6 +39,14 @@ def parser():
     source_arguments(view, 100000)
     view.add_argument("--output", default="artifacts")
     view.add_argument("--weights", help="Optional existing local YOLO weights")
+    view.add_argument("--scene", action="store_true", help="Stationary reference-plane scene inspector")
+    view.add_argument("--scene-config", help="Scene segmentation JSON settings")
+    scene = sub.add_parser("scene", help="Headless stationary scene inspection and baseline comparison")
+    source_arguments(scene, 1)
+    scene.add_argument("--scene-config")
+    scene.add_argument("--output", help="New directory for paired scene JSON + RGB-D snapshots")
+    scene.add_argument("--baseline", help="Previously exported scene JSON, same stationary setup")
+    scene.add_argument("--export-cloud", action="store_true", help="Export colored object points per frame")
     capture = sub.add_parser("capture", help="Save aligned portable RGB-D snapshots")
     source_arguments(capture)
     capture.add_argument("--output", required=True)
@@ -69,7 +78,9 @@ def make_source(args, config):
     if args.source == "demo":
         if args.input:
             raise ValueError("--input is only valid for replay/native")
-        return SyntheticSource(args.frames, config.color_width, config.color_height, config.fps)
+        name = args.demo_scene or ("tabletop" if args.command == "scene" or getattr(args, "scene", False) else "box")
+        factory = TabletopSource if name == "tabletop" else SyntheticSource
+        return factory(args.frames, config.color_width, config.color_height, config.fps)
     if args.source == "replay":
         if not args.input:
             raise ValueError("replay requires --input")
@@ -95,6 +106,21 @@ def process_frames(args):
         raise ValueError("--native-record requires --source camera")
     numbers, timestamps, domains = [], [], []
     started = time.monotonic()
+    scene_inspector = baseline = None
+    if args.command == "scene" or (args.command == "view" and args.scene):
+        from .scene import SceneConfig, SceneInspector
+        scene_inspector = SceneInspector(SceneConfig.load(args.scene_config))
+    if args.command == "view" and args.scene_config and not args.scene:
+        raise ValueError("--scene-config requires --scene")
+    if args.command == "scene":
+        if args.export_cloud and not args.output:
+            raise ValueError("--export-cloud requires --output")
+        if args.baseline:
+            baseline = json.loads(Path(args.baseline).read_text(encoding="utf-8"))
+            if not isinstance(baseline, dict):
+                raise ValueError("Baseline must be a scene JSON object")
+        if args.output:
+            Path(args.output).mkdir(parents=True, exist_ok=False)
     with make_source(args, config) as source:
         if args.command == "view":
             from .viewer import show
@@ -102,7 +128,7 @@ def process_frames(args):
             if args.weights:
                 from .detection import Detector
                 detector = Detector(args.weights)
-            show(source, config, args.output, detector)
+            show(source, config, args.output, detector, scene_inspector)
             return
         for index, frame in enumerate(source):
             numbers.append(frame.number)
@@ -110,6 +136,15 @@ def process_frames(args):
             domains.append(frame.timestamp_domain)
             if args.command == "capture":
                 save_frame(Path(args.output)/f"frame_{index:06d}.npz", frame)
+            elif args.command == "scene":
+                from .scene_io import save_scene
+                from .scene import compare_scenes
+                result = scene_inspector.inspect(frame)
+                if baseline is not None:
+                    result.report["baseline_comparison"] = compare_scenes(result.report, baseline)
+                if args.output:
+                    save_scene(Path(args.output)/f"scene_{index:06d}", frame, result, args.export_cloud)
+                emit(result.report)
             elif args.command == "analyze":
                 result = summarize(frame, config.max_depth_m)
                 if args.pixel:
@@ -127,6 +162,8 @@ def process_frames(args):
                 break
     if not numbers:
         raise ValueError("Source produced no frames")
+    if args.command == "scene":
+        return
     report = frame_health(numbers, timestamps, domains, time.monotonic()-started)
     report["source"] = args.source
     report["config"] = config.to_dict()

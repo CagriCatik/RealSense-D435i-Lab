@@ -8,7 +8,7 @@ class ArchitectureTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]/"src"/"realsense_lab"
         forbidden = {"pyrealsense2", "cv2", "ultralytics", "open3d", "rclpy",
                      "sdk", "viewer", "detection", "cli", "reconstruction"}
-        for name in ("models", "geometry", "storage", "analysis", "tracking", "imu"):
+        for name in ("models", "geometry", "storage", "analysis", "tracking", "imu", "scene", "scene_render"):
             tree = ast.parse((root/f"{name}.py").read_text())
             for node in ast.walk(tree):
                 if isinstance(node, ast.Import):

@@ -54,3 +54,40 @@ class ReplaySource:
     def __iter__(self):
         for path in self.paths:
             yield load_frame(path)
+
+
+class TabletopSource(SyntheticSource):
+    """Known sloped support plane with two disjoint raised top surfaces.
+
+    This ray-cast fixture is deliberately not a photorealistic or complete box model.
+    The two surfaces are 0.12 and 0.18 meters above a plane facing the camera.
+    """
+    def __iter__(self):
+        w, h = self.width, self.height
+        k = Intrinsics(w, h, .9*w, .9*w, (w-1)/2, (h-1)/2)
+        yy, xx = np.mgrid[:h, :w]
+        rays = np.stack(((xx-k.ppx)/k.fx, (yy-k.ppy)/k.fy, np.ones((h, w))), axis=-1)
+        normal = np.array([0., -.6, -.8])
+        offset = 1.2
+        denominator = rays @ normal
+        base_depth = -offset/denominator
+        depth = base_depth.copy()
+        color = np.empty((h, w, 3), np.uint8)
+        checker = (xx//24+yy//24) % 2
+        color[:] = (85, 120, 100)
+        color[checker == 0] = (95, 135, 110)
+        tangent = np.array([0., -.8, .6])
+        for center_u, center_v, extent_u, extent_v, height, rgb in (
+                (-.22, .9, .22, .25, .12, (246, 189, 55)),
+                (.23, .9, .18, .22, .18, (80, 162, 245))):
+            raised_depth = (height-offset)/denominator
+            xyz = rays*raised_depth[..., None]
+            u, v = xyz[..., 0], xyz @ tangent
+            mask = (np.abs(u-center_u) <= extent_u/2) & (np.abs(v-center_v) <= extent_v/2)
+            depth[mask] = raised_depth[mask]
+            color[mask] = rgb
+        for number in range(self.count):
+            rng = np.random.default_rng(number)
+            measured = (depth+rng.normal(0., .0008, (h, w))).astype(np.float32)
+            measured[::31, ::29] = 0
+            yield Frame(color.copy(), measured, k, number*1000/self.fps, number)

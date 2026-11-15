@@ -1,0 +1,13 @@
+{
+  "stride": 4,
+  "plane_threshold_m": 0.008,
+  "min_height_m": 0.025,
+  "max_height_m": 0.5,
+  "cluster_gap_m": 0.06,
+  "min_object_points": 25,
+  "min_plane_points": 100,
+  "min_plane_fraction": 0.5,
+  "max_fit_points": 4000,
+  "max_depth_m": 3.0,
+  "reference_roi": [0.0, 0.0, 1.0, 1.0]
+}

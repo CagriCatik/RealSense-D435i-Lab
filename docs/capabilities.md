@@ -1,6 +1,6 @@
 # Funktionsmatrix
 
-Stand 0.1.0. **Kern geprüft** heißt: automatischer Test mit synthetischen Daten. **Adapter vorhanden** heißt: ausführbarer Integrationscode, noch keine Hardware-/Desktop-/Modellabnahme. Kein Eintrag ist derzeit an einer physischen D435i in dieser Entwicklungsumgebung abgenommen.
+Stand 0.2.0. **Kern geprüft** heißt: automatischer Test mit synthetischen Daten. **Adapter vorhanden** heißt: ausführbarer Integrationscode, noch keine Hardware-/Desktop-/Modellabnahme. Kein Eintrag ist derzeit an einer physischen D435i in dieser Entwicklungsumgebung abgenommen.
 
 | Funktion | Umsetzung | Softwareprüfung | Hardware/Integration | Referenz |
 |---|---|---|---|---|
@@ -25,7 +25,8 @@ Stand 0.1.0. **Kern geprüft** heißt: automatischer Test mit synthetischen Date
 | Dominante Ebene | RANSAC + SVD | Ausreißer/Degeneration geprüft | Reale Oberflächen offen | Eigener Algorithmus |
 | Boden/Hindernisse/freier Raum | Ebenenbaustein vorhanden, Semantik/Belegung geplant | Nicht fertig | Offen | Ausbau |
 | Sichtbare XYZ-Ausdehnung | `analyze` | Kern geprüft | Keine vollständige Objektvermessung | Eigenes Verfahren |
-| Tischgestützte Objektabmessung | Segmentierung + Tischbezug geplant | Nicht implementiert | Offen | Ausbau |
+| Referenzgestützte sichtbare Objektmaße | `scene` / `view --scene`: feste Ebene, 3D-Cluster, Position/Ausdehnung/Höhe | Synthetische Numerik, Replay und UI-Grenze geprüft | Reale Referenzkörper/GUI offen; keine vollständigen Körpermaße | Eigenes Verfahren |
+| Szenenvergleich | Einmalige geometrische Baseline-Zuordnung, signierte Messwertdifferenzen | Zuordnung/Fehlerfälle geprüft | Unveränderter Kameraaufbau erforderlich | Eigenes Verfahren |
 | YOLO + räumliche Position | Lokales Modell + Median am Boxzentrum | Inferenzadapter vorhanden | Modell/GPU/Live offen | S14 |
 | Metrisches Objekttracking | Klassen-Gate + Greedy-Zuordnung | ID/Gates/Zeitsprünge geprüft | Kamerabewegung nicht kompensiert | Eigenes Verfahren |
 | IMU-Bias-/Rauschdiagnose | Stationäre CSV-Auswertung | Kern geprüft | Stationarität/Kalibrierung offen | S4 |

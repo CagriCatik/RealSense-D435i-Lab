@@ -1,6 +1,8 @@
 # 09 — Sichtbare Ausdehnung und Objektvermessung
 
-**Stand:** Sichtbare AABB geprüft; vollständige Objektvermessung geplant.
+**Stand:** Sichtbare AABB sowie referenzgestützte Segmentmaße geprüft; vollständige Körpervermessung geplant.
+
+Neu: `rs-lab scene --source demo` segmentiert einzelne geometrische Objekte und meldet Position, sichtbare Ebenenausdehnung und Höhe zur Referenz. [V1-Anleitung](../../docs/scene-inspector.md)
 
 ## Lernziel und Einordnung
 

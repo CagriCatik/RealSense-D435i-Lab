@@ -12,7 +12,7 @@ Alle Befehle werden aus dem Repository-Hauptverzeichnis ausgeführt. Zuerst [Ein
 | 06 | [Interaktive 3D-Messung](projects/06_measurements/TUTORIAL.md) | Numerik geprüft; grafischer Messversuch offen |
 | 07 | [Punktwolken und Export](projects/07_pointclouds/TUTORIAL.md) | Deprojektion/Farbzuordnung/PLY geprüft; Liveansicht offen |
 | 08 | [Ebenen und Hindernisbausteine](projects/08_planes_obstacles/TUTORIAL.md) | RANSAC-Ebene geprüft; Boden-/Hindernissemantik geplant |
-| 09 | [Sichtbare Ausdehnung und Objektvermessung](projects/09_object_dimensions/TUTORIAL.md) | Sichtbare AABB geprüft; vollständige Objektvermessung geplant |
+| 09 | [Sichtbare Ausdehnung und Objektvermessung](projects/09_object_dimensions/TUTORIAL.md) | Sichtbare AABB/Referenzmaße geprüft; vollständige Körpervermessung geplant |
 | 10 | [YOLO mit 3D-Position](projects/10_yolo_3d/TUTORIAL.md) | Inferenzadapter vorhanden; Modell-/Hardwareabnahme offen |
 | 11 | [Räumliches Tracking](projects/11_tracking/TUTORIAL.md) | Zuordnung, IDs, Ablauf und Zeitresets geprüft; Livequalität offen |
 | 12 | [IMU-Aufnahme und Diagnose](projects/12_imu/TUTORIAL.md) | CSV-Auswertung geprüft; Motion-Adapter und reale Rate offen |

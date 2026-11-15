@@ -1,6 +1,8 @@
 # 08 — Ebenen und Hindernisbausteine
 
-**Stand:** RANSAC-Ebene geprüft; Boden-/Hindernissemantik geplant.
+**Stand:** RANSAC und stationäre Referenzsegmentierung geprüft; Boden-/Hindernissemantik geplant.
+
+Die zusammenhängende Anwendung `rs-lab scene --source demo` verwendet diesen Baustein für eine feste Referenz und Objektcluster. [V1-Anleitung](../../docs/scene-inspector.md)
 
 ## Lernziel und Einordnung
 

@@ -37,9 +37,10 @@ def cloud_image(frame, maximum):
     return image
 
 
-def show(source, config, output="artifacts", detector=None):
+def show(source, config, output="artifacts", detector=None, scene_inspector=None):
     cv = cv_module()
-    title = "D435i Lab | RGB - Depth - Bird's-eye"
+    title = ("D435i Scene Inspector | RGB - Depth - Segments" if scene_inspector
+             else "D435i Lab | RGB - Depth - Bird's-eye")
     cv.namedWindow(title, cv.WINDOW_AUTOSIZE)
     state = {"frame": None, "frozen": False, "points": [], "message": "Space: freeze before measuring"}
 
@@ -66,19 +67,33 @@ def show(source, config, output="artifacts", detector=None):
     iterator = iter(source)
     detections = []
     tracker = Tracker()
+    scene_result = None
+    scene_dirty = True
     try:
         while True:
             tick = time.monotonic()
             if not state["frozen"]:
                 try:
                     state["frame"] = next(iterator)
+                    scene_dirty = True
                 except StopIteration:
                     break
                 if detector:
                     detections = tracker.update(detector.predict(state["frame"]),
                                                 state["frame"].timestamp_ms)
             frame = state["frame"]
+            if scene_inspector and scene_dirty:
+                try:
+                    scene_result = scene_inspector.inspect(frame)
+                except ValueError as exc:
+                    scene_result = None
+                    state["message"] = str(exc)
+                scene_dirty = False
             rgb = frame.color[..., ::-1].copy()
+            right_panel = cloud_image(frame, config.max_depth_m)
+            if scene_result is not None:
+                from .scene_view import annotate_scene
+                right_panel = annotate_scene(cv, rgb, frame, scene_result, scene_inspector.config.stride)
             for detection in detections:
                 x1, y1, x2, y2 = map(int, detection["xyxy"])
                 xyz = detection["xyz_m"]
@@ -93,12 +108,15 @@ def show(source, config, output="artifacts", detector=None):
             normalized = np.clip(np.nan_to_num(frame.depth_m)/config.max_depth_m*255, 0, 255).astype(np.uint8)
             depth = cv.applyColorMap(255-normalized, cv.COLORMAP_TURBO)
             depth[~valid] = 0
-            canvas = np.hstack((rgb, depth, cloud_image(frame, config.max_depth_m)))
+            canvas = np.hstack((rgb, depth, right_panel))
             cv.putText(canvas, "FROZEN" if state["frozen"] else "LIVE / REPLAY", (10, 23),
                        cv.FONT_HERSHEY_SIMPLEX, .6, (255, 255, 255), 2)
             cv.putText(canvas, state["message"], (10, canvas.shape[0]-35),
                        cv.FONT_HERSHEY_SIMPLEX, .5, (255, 255, 255), 1)
-            cv.putText(canvas, "Space freeze | click 2 RGB points | S snapshot | P PLY | M measurement | Q quit",
+            help_text = "Space freeze | click 2 RGB points | S snapshot | P PLY | M measurement | Q quit"
+            if scene_inspector:
+                help_text += " | C recalibrate | S scene+snapshot"
+            cv.putText(canvas, help_text,
                        (10, canvas.shape[0]-12), cv.FONT_HERSHEY_SIMPLEX, .45, (255, 255, 255), 1)
             cv.imshow(title, canvas)
             key = cv.waitKey(10) & 0xff
@@ -108,9 +126,20 @@ def show(source, config, output="artifacts", detector=None):
                 state["frozen"] = not state["frozen"]
                 state["points"].clear()
             stem = output_stem(output)
+            if key == ord("c") and scene_inspector:
+                scene_inspector.reset()
+                scene_result, scene_dirty = None, True
+                state["message"] = "Recalibrating reference; camera must remain fixed"
             if key == ord("s"):
-                save_frame(stem.with_suffix(".npz"), frame)
-                state["message"] = f"Saved {stem.name}.npz"
+                if scene_inspector and scene_result is not None:
+                    from .scene_io import save_scene
+                    save_scene(stem, frame, scene_result, export_cloud=True)
+                    state["message"] = f"Saved scene JSON + RGB-D + object PLY: {stem.name}"
+                elif scene_inspector:
+                    state["message"] = "No valid scene result to save; choose a clear reference ROI"
+                else:
+                    save_frame(stem.with_suffix(".npz"), frame)
+                    state["message"] = f"Saved {stem.name}.npz"
             if key == ord("p"):
                 xyz, pixels = frame_cloud(frame, 2, config.max_depth_m)
                 write_ply(stem.with_suffix(".ply"), xyz, frame.color[pixels[:, 0], pixels[:, 1]])

@@ -11,6 +11,10 @@ Ziel: dieselben Algorithmen mit Livekamera, synthetischen Daten und Wiedergabe b
 | analysis | Qualitätskennzahlen und Streamgesundheit | Nein |
 | tracking | Metrische, klassenabhängige Zuordnung | Nein |
 | imu | CSV-Diagnose von Motion-Zeitreihen | Dateiformat |
+| scene | Feste Referenzebene, geometrische Segmente, sichtbare Maße und Baseline-Vergleich | Nein |
+| scene_render | Segmentraster in RGB-Farben umsetzen | Nein |
+| scene_io | Zusammengehörige Scene-JSON-/NPZ-/PLY-Ausgabe | Dateisystem |
+| scene_view | Objektboxen und Kennzahlen zeichnen | OpenCV |
 | sdk | Gerätesuche, RGB-D, Filter, IR, Motion und native Aufnahme | pyrealsense2 |
 | detection | YOLO-Inferenz und RGB/BGR-Übergang | Ultralytics |
 | viewer | Darstellung, Tastatur und Mausinteraktion | OpenCV |
