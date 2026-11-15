@@ -1,6 +1,6 @@
 # Funktionsmatrix
 
-Stand 0.2.0. **Kern geprüft** heißt: automatischer Test mit synthetischen Daten. **Adapter vorhanden** heißt: ausführbarer Integrationscode, noch keine Hardware-/Desktop-/Modellabnahme. Kein Eintrag ist derzeit an einer physischen D435i in dieser Entwicklungsumgebung abgenommen.
+Stand 0.3.0. **Kern geprüft** heißt: automatischer Test mit synthetischen Daten. **Adapter vorhanden** heißt: ausführbarer Integrationscode, noch keine Hardware-/Desktop-/Modellabnahme. Kein Eintrag ist derzeit an einer physischen D435i in dieser Entwicklungsumgebung abgenommen.
 
 | Funktion | Umsetzung | Softwareprüfung | Hardware/Integration | Referenz |
 |---|---|---|---|---|
@@ -32,9 +32,10 @@ Stand 0.2.0. **Kern geprüft** heißt: automatischer Test mit synthetischen Date
 | IMU-Bias-/Rauschdiagnose | Stationäre CSV-Auswertung | Kern geprüft | Stationarität/Kalibrierung offen | S4 |
 | IMU-Orientierungsfusion / VIO | Geplant | Nicht implementiert | Offen | S4 |
 | TSDF mit bekannten Posen | Optionaler Open3D-Adapter | Syntax; noch kein Open3D-Lauf | Offen | S15 |
-| Automatische Scanregistrierung / Meshworkflow | TSDF-Baustein vorhanden, Registrierung geplant | Nicht fertig | Offen | S15 |
+| Lokale automatische Registrierung | `map`: NumPy-Projektions-/point-to-plane-Odometrie und Poseverkettung | Bekannte Bewegung/Skalierung, Degeneration und Fehlermodi geprüft | Echte Kamera/Drift/Robustheit offen | Eigener Algorithmus |
+| Farbige mobile Voxelkarte | Begrenzte Fusion akzeptierter Posen, Trajektorie/Journal/Replay/TSDF-Manifest | Synthetische Sequenz und Replay geprüft | Keine globale Optimierung; Open3D-Mesh separat offen | Eigene Verarbeitung |
 | ROS 2 / TF / RViz | Upstream-Launch eingebunden, Anleitung | Syntax; ROS-Lauf offen | Offen | S9, S10 |
-| SLAM / Mapping / Navigation | RTAB-Map-/Robotik-Ausbau beschrieben | Nicht implementiert | Offen | S16 |
+| ROS-SLAM / Navigation | RTAB-Map-Launch vorhanden; Nav2 bleibt geplant | ROS-Launch nur Syntaxprüfung; NumPy ist kein vollständiger SLAM-Backend | ROS-/Hardwareabnahme offen | S16 |
 | Zeitstempel/Sequenzzähler | Pro Frame mit Domain | Kern geprüft | Echte Zeit-/Verlustmessung offen | S4, S8 |
 | Vollständige SDK-Frame-Metadaten | Geplant | Nicht implementiert | Offen | S3 |
 | Streamgesundheit/Hostdurchsatz | `benchmark` | Kern geprüft | Last-/USB-Prüfung offen | Eigene Messung |

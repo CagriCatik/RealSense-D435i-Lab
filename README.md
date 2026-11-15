@@ -2,7 +2,7 @@
 
 Ein praktisches RGB-D-/IMU-Labor für Çağrı Çatık: Kamerafunktionen verstehen, Messungen nachvollziehen und daraus 3D-Wahrnehmungs- und Robotikprojekte entwickeln.
 
-**Version 0.2.0:** Stationärer Szeneninspektor als erste zusammenhängende Anwendung: Referenzfläche kalibrieren, Objektflächen segmentieren, Positionen und sichtbare Ausdehnungen messen, Track-IDs anzeigen und gespeicherte Szenen vergleichen. Dazu bleiben Kameraadapter, Aufnahme/Wiedergabe, 3D Object Explorer, optionales YOLO, IMU und ROS-/TSDF-Einstiege verfügbar. Mobile Kartierung, vollständige Objektvermessung und Navigation sind Ausbauprojekte; siehe [Funktionsmatrix](docs/capabilities.md).
+**Version 0.3.0:** V1 inspiziert stationäre Szenen; V2 ergänzt lokale Tiefenodometrie, geschätzte Kameraposen, farbige Voxelkarte, Trackingverlust-Status und eine wiederholbare mobile Demo. Ein eigener ROS-Launch verbindet D435i, IMU-Orientierung und RTAB-Map. Der NumPy-Mapper ist lokale geometrische Odometrie mit Drift, ohne Loop Closure oder IMU-Fusion. ROS und reale Kamera bleiben separat abzunehmen. [Funktionsmatrix](docs/capabilities.md)
 
 **Prüfstand:** Die automatischen Kern- und Integrationstests laufen ohne Kamera. Die D435i, grafische Desktopfunktionen und optionalen ML-/ROS-/Open3D-Integrationen müssen an deiner Hardware abgenommen werden. Dieses Repository ist keine Herstellerzertifizierung.
 
@@ -66,6 +66,21 @@ Im Szenenmodus zeigt das dritte Panel Referenzfläche (grün), geometrische Obje
 
 Die Kamera muss feststehen. Die Referenz ist eine vom Anwender ausgewählte dominante Fläche, kein automatisch bestätigter Boden. Die synthetische Demo enthält Flächen mit bekannten 12/18 cm Abstand zur Referenz; daraus folgt keine reale D435i-Genauigkeit. [Ablauf, Einstellungen und Grenzen](docs/scene-inspector.md)
 
+## V2: Mobile lokale Kartierung
+
+```bash
+# Nur NumPy nötig: Bewegung schätzen und Karte speichern
+rs-lab map --source demo --frames 12 --output recordings/map-001
+
+# Identische Daten ohne Kamera erneut verarbeiten
+rs-lab map --source replay --input recordings/map-001 --frames 12 --output recordings/map-replay-001
+
+# Optionale Livevorschau; Kamera langsam durch geometrisch vielfältige Szene bewegen
+rs-lab map --source camera --frames 300 --mapping-config configs/mapping.json --output recordings/map-real-001 --preview
+```
+
+Ergebnis: `map.ply`, geschätzte `camera_to_world`-Trajektorie, RGB-D-Snapshots, Statusjournal und ein Posemanifest für den vorhandenen TSDF-Einstieg. Fehlende Überlappung, degenerierte Geometrie, Zeitfehler und überschrittene Bewegungsgates stoppen weitere Fusion. Der Exitcode ist bei Trackingverlust 2; bereits gültige Teilkarten bleiben erhalten. Für den ROS-SLAM-Einstieg siehe [V2-Anleitung](docs/mobile-mapping.md).
+
 ## YOLO und räumliches Tracking
 
 ```bash
@@ -85,6 +100,7 @@ Das Modell muss lokal vorhanden sein. Es wird kein Modell automatisch herunterge
 | [Architektur](docs/architecture.md) | Modulgrenzen, Einheiten und Datenfluss |
 | [CLI](docs/cli.md) | Befehle und Aufnahmeformate |
 | [Szeneninspektor](docs/scene-inspector.md) | Stationäre Anwendung, Aufnahmevergleich und Abnahme |
+| [Mobile Kartierung](docs/mobile-mapping.md) | Lokale Kamerapose, Karte, Fehlerzustände und RTAB-Map |
 | [Hardware-Abnahme](docs/hardware-validation.md) | Konkrete Prüfungen an deiner Kamera |
 | [Roadmap](docs/roadmap.md) | Ausbau bis Rekonstruktion, SLAM und Robotik |
 | [Offizielle Quellen](docs/sources.md) | Hersteller, SDK, ROS-Wrapper und Integrationen |

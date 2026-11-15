@@ -1,6 +1,8 @@
 # 15 — Mapping und Robotikplanung
 
-**Stand:** Ausbauprojekt; kein SLAM-/Nav2-Stack implementiert.
+**Stand:** Lokale Kartierung automatisch geprüft; ROS-/RTAB-Map-Launch vorhanden, reale Abnahme offen; Nav2 geplant.
+
+[V2-Anleitung](../../docs/mobile-mapping.md)
 
 ## Lernziel und Einordnung
 
@@ -8,21 +10,22 @@ Mapping braucht Pose/Odometrie, korrekte Zeit-/TF-Bezüge und eine Repräsentati
 
 ## Dateien und Voraussetzungen
 
-In diesem Projektordner liegt diese Anleitung. Der ausführbare Code wird gemeinsam im Paket unter `src/realsense_lab/` verwendet: **analysis.py / summarize als Baustein; docs/roadmap.md R7–R11**. So entstehen keine voneinander abweichenden Kopien der Kameraaufnahme. Python >=3.11, Umgebung aus der Einrichtung; Zusatzbedarf: core für Vorarbeit; ROS/RTAB-Map später.
+In diesem Projektordner liegt diese Anleitung. Der ausführbare Code wird gemeinsam im Paket unter `src/realsense_lab/` verwendet: **odometry.py / ProjectiveOdometry; mapping.py / LocalMapper; mapping_app.py; ros2/mapping.launch.py**. So entstehen keine voneinander abweichenden Kopien der Kameraaufnahme. Python >=3.11, Umgebung aus der Einrichtung; Zusatzbedarf: NumPy für lokale Kartierung; ROS/RTAB-Map für den getrennten SLAM-Einstieg.
 
 ## Einrichtung und Ablauf
 
 Arbeitsverzeichnis: Repository-Hauptverzeichnis.
 
 ```bash
-Siehe ../../ros2/README.md für die Systeminstallation.
+python -m pip install -e .
+# ROS-Systeminstallation separat: siehe ros2/README.md
 ```
 
 ```bash
-rs-lab analyze --source demo
+rs-lab map --source demo --frames 12 --output recordings/tutorial-15
 ```
 
-Die ausführbare Vorarbeit ist Tiefen-/Ebenenanalyse. Eine Karte oder autonome Fahrt wird noch nicht erzeugt.
+Es entstehen eine farbige lokale Voxelkarte, eine geschätzte Trajektorie, RGB-D-Snapshots, ein Statusjournal und ein TSDF-Posemanifest. Autonome Fahrt ist nicht implementiert.
 
 ## Experiment
 

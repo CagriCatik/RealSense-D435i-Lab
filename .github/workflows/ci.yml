@@ -25,6 +25,8 @@ jobs:
       - run: rs-lab export --source replay --input artifacts/demo --output artifacts/cloud.ply
       - run: rs-lab scene --source demo --frames 3 --output artifacts/scene --export-cloud
       - run: rs-lab scene --source replay --input artifacts/scene --frames 3 --baseline artifacts/scene/scene_000000.json --output artifacts/scene-compare
+      - run: rs-lab map --source demo --frames 5 --output artifacts/map
+      - run: rs-lab map --source replay --input artifacts/map --frames 5 --output artifacts/map-replay
       - uses: actions/upload-artifact@v4
         with:
           name: demo-python-${{ matrix.python }}

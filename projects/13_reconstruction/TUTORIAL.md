@@ -4,7 +4,7 @@
 
 ## Lernziel und Einordnung
 
-Manifest schema=1 enthält frames mit file und camera_to_world. Die Pose ist eine starre 4x4-Matrix in Metern. Open3D erhält ihre Inverse. Automatische Registrierung und SLAM sind noch nicht enthalten.
+Manifest schema=1 enthält frames mit file und camera_to_world. Die Pose ist eine starre 4x4-Matrix in Metern. Open3D erhält ihre Inverse. Dieser TSDF-Befehl schätzt selbst keine Posen. Der neue `map`-Befehl kann lokale Posen aus einer Sequenz schätzen und ein kompatibles Manifest erzeugen; Loop Closure und globale Optimierung fehlen im NumPy-Backend. [V2](../../docs/mobile-mapping.md)
 
 ## Dateien und Voraussetzungen
 

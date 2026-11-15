@@ -7,6 +7,7 @@
 | inspect | Geräte, Firmware, USB-Modus, Sensorprofile, Intrinsics und Optionsbereiche als JSON |
 | view | Explorer mit Messung; optional YOLO und metrische Track-IDs |
 | scene | Stationäre Referenzfläche, Objektsegmentierung und Vergleich; JSON-/NPZ-/PLY-Sitzung |
+| map | Lokale Tiefenodometrie, farbige Voxelkarte, Trajektorie und Diagnosejournal |
 | infrared | Linkes/rechtes natives IR-Bild; eigene Kamerasitzung |
 | capture | Ausgerichtete RGB-D-Snapshots; optional zusätzlich native SDK-Aufnahme |
 | analyze | Erste Szene: Tiefenstatistik, sichtbare Ausdehnung, dominante Ebene, optionale Punktmessung |
@@ -22,7 +23,7 @@
 
 `--frames` begrenzt die Verarbeitung. Demo/Wiedergabe werden bei Aufnahme und Benchmark nicht künstlich auf Sensorbildrate gedrosselt; der Viewer begrenzt seine Darstellung. Analyse/Export verwenden jeweils nur das erste Bild.
 
-`--demo-scene box|tabletop` wählt die synthetische Szene. `scene` und `view --scene` wählen ohne Angabe tabletop; alle übrigen Befehle bleiben bei box. `scene --output` erwartet ein neues Verzeichnis und schreibt je Bild einen Bericht mit Snapshot. `--baseline` vergleicht gegen einen gültigen Bericht desselben festen Aufbaus. `--export-cloud` ergänzt Objekt-PLYs und braucht `--output`. [Szenenanleitung](scene-inspector.md)
+`--demo-scene box|tabletop|room` wählt die synthetische Szene. `scene` und `view --scene` wählen ohne Angabe tabletop; `map` wählt room; die übrigen Befehle bleiben bei box. Die Raumdemo endet nach maximal 61 Frames. `scene --output` erwartet ein neues Verzeichnis und schreibt je Bild einen Bericht mit Snapshot. `--baseline` vergleicht gegen einen gültigen Bericht desselben festen Aufbaus. `--export-cloud` ergänzt Objekt-PLYs und braucht `--output`. [Szenenanleitung](scene-inspector.md)
 
 ```bash
 rs-lab capture --source camera --frames 300 --output recordings/rgbd-001 --native-record recordings/native-001.bag
@@ -42,4 +43,6 @@ JSON mit strikter Schlüssel-/Typprüfung. `default.json` aktiviert räumliche G
 
 Kameraablauf: RGB-Ausrichtung → Threshold → optional Disparität → Spatial → Temporal → Tiefe → optional Hole Filling. Diese einfache Reihenfolge ist implementiert; in Qualitätsversuchen mit nativer Tiefenfilterung vor Ausrichtung vergleichen. Demo/portable Wiedergabe nutzen ihre vorhandenen Tiefendaten unverändert; SDK-Filter laufen nur auf SDK-Quellen. `max_depth_m` begrenzt zusätzlich Analyse und Punktwolkenexport; der Viewer skaliert seine Farbkarte damit.
 
-Exitcodes: 0 Erfolg, 2 Eingabe-/Gerätefehler oder keine Kamera bei inspect, 130 Unterbrechung. GUI-Fehler ohne Desktop lassen sich nicht auf allen OpenCV-Builds als Python-Ausnahme behandeln.
+`map --output` erwartet ein neues Sitzungsverzeichnis; `--mapping-config` steuert Odometrie/Fusion, `--preview` aktiviert den optionalen Desktop. Trackingverlust erhält Teilkarte/Journal, beendet aber die Fusion und liefert Exitcode 2. [V2-Anleitung](mobile-mapping.md)
+
+Exitcodes: 0 Erfolg, 2 Eingabe-/Gerätefehler, keine Kamera bei inspect oder erkannter Trackingverlust beim Mapping, 130 Unterbrechung. GUI-Fehler ohne Desktop lassen sich nicht auf allen OpenCV-Builds als Python-Ausnahme behandeln.

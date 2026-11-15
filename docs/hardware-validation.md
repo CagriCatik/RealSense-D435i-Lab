@@ -30,6 +30,10 @@ Pro Sitzung Datum, OS/Kernel, Python-/SDK-/Wrapper-Version, Firmware, Gerät/Rev
 
 H16: Kamera fest montieren, freie Referenz-ROI wählen, geeignete Körper mit unabhängig bekannten Höhen und sichtbaren Abmessungen aufnehmen. `view --scene` prüfen: Segmentierung, Zweipunktmessung, Freeze, C-Neukalibrierung und S-Dateipaar. Danach mit `scene --source replay` nachrechnen und Baseline-Differenzen prüfen. Referenz verdecken/Kamera bewegen: keine veralteten Objektwerte bei erkanntem Referenzverlust. Gleiche Ebene garantiert keine unveränderte Kamerapose. Reale Abnahme offen.
 
+## V2: mobile lokale Kartierung
+
+H17: Kamera langsam durch eine statische geometrisch vielfältige Referenzszene bewegen; `map` mit Aufzeichnung/Journal ausführen. Kamera-/Weltachsen und Maßstab prüfen. Bekannte kurze Wege und Rückkehr zum Start unabhängig vermessen, Drift/Verluste berichten. Einzelwand, fehlende Tiefe, schnelle Bewegung und Zeitfehler prüfen: nach erkanntem Verlust keine weitere Fusion oder aktuelle Weltpose. Teilkarte/Journal und deterministische Wiedergabe vergleichen. ROS-/RTAB-Map-Einstieg separat mit TF/QoS/IMU und neuer Datenbank abnehmen. Noch keine Freigabe für autonome Navigation.
+
 ## Tiefenqualität sauber bewerten
 
 Kamera und Ziel fixieren. Eine ausreichend große ebene, geeignete Oberfläche und ein nachvollziehbares Referenzmessmittel verwenden. Abstand auf das definierte Kamera-/Sensorkoordinatensystem beziehen. ROI und mindestens einige hundert Frames pro Bedingung archivieren. Bias = mittlere/mediane gemessene Z minus Referenz-Z; relative Abweichung = Betrag(Bias)/Referenz-Z. Zeitliche Streuung und räumliche Ebenenabweichung getrennt berichten. Die Nachbarschafts-MAD im Explorer ist weder diese gesamte Prüfung noch eine kalibrierte Messunsicherheit.

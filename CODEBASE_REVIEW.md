@@ -1,4 +1,4 @@
-# Entwicklungsprüfung 0.2.0
+# Entwicklungsprüfung 0.3.0
 
 ## Ergebnis
 
@@ -7,6 +7,10 @@ Das neue Repository hat eine gemeinsame RGB-D-Verarbeitung statt duplizierter Pr
 ## V1-Szeneninspektor
 
 Neu: stationäre Referenzkalibrierung, Objektcluster mit 3D-Nachbarschaftsgate, sichtbare Maße/Höhe, lokale IDs, Replay und Baseline-Vergleich. Dazu kommen gepaarte JSON-/NPZ-/Objekt-PLY-Ausgabe sowie ein Explorer-Modus. Eine geneigte synthetische Referenz und zwei Flächen in 12/18 cm Abstand dienen als numerischer Nachweis. Referenzverlust liefert keine veralteten Objektwerte. Kamerabewegung entlang der Ebene kann trotzdem unentdeckt bleiben; feste Montage ist erforderlich. UI-Grenztests ersetzen keine echte Desktopabnahme.
+
+## V2 lokale Kartierung
+
+Neu sind geometrische projektive point-to-plane-Odometrie, beobachtbarkeits-/residuen-/bewegungsabhängige Annahme, inverse Poseverkettung, farbige Voxelmittelung mit Kapazitätsgrenze und ein verriegelter Trackingverlust-Zustand. Die Raumdemo liefert unabhängige Sollposen; diese werden nicht in die Verarbeitung eingespeist. Automatische Tests prüfen die Schätzung, Rotations-/Translationsverkettung, Einzelwand-Degeneration, Zeitfehler, Kapazitätsfehler, Journal/Manifest und Replay. Die Karten-Vorschau wird an einer simulierten UI-Grenze geprüft. Ein eigener ROS-Launch für Kamera/IMU/RTAB-Map wird nur syntaktisch geprüft. Das NumPy-Verfahren verwendet Tiefe, nicht RGB-Photometrie, und hat weder Loop Closure noch IMU-Fusion oder globale Optimierung. Reale Drift-/Robustheitsnachweise bleiben offen.
 
 ## Geprüfter Umfang
 

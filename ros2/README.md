@@ -32,4 +32,4 @@ ros2 bag record -o recordings/ros-session-001 /camera/camera/color/image_raw /ca
 
 Ein bereits vorhandenes `recordings`-Verzeichnis voraussetzen bzw. vorher anlegen. Bei Mehrkamera oder Robotermontage zuerst Namen, extrinsische TFs und Mounting prüfen. Die optischen Kameraframes folgen x rechts/y unten/z vorwärts; ein Roboter-`base_link` üblicherweise x vorwärts/y links/z oben. Keine ungeprüften Identitätstransformationen einsetzen.
 
-RTAB-Map, VIO, Belegungskarte und Navigation sind [Ausbaupakete R7–R11](../docs/roadmap.md). Sie sind noch keine lauffertige SLAM-/Nav2-Konfiguration in diesem Repository.
+Für RTAB-Map ist jetzt `ros2/mapping.launch.py` vorhanden: Kamera, IMU-Orientierung, RGB-D-Odometrie, SLAM und Visualisierung in einem Einstieg. Start, Datenbankverhalten und offene Integrationsabnahme stehen in [V2](../docs/mobile-mapping.md). ROS wurde hier nur syntaktisch geprüft. VIO, robuste Robotermontage, Belegung und Navigation bleiben [Ausbaupakete R7–R11](../docs/roadmap.md).

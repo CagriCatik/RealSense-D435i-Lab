@@ -1,7 +1,7 @@
 # Repository rules
 
 - Use the D435i, not D435/D455/T265 capabilities as the target. Check official sources in docs/sources.md.
-- Core modules (models, geometry, analysis, storage, tracking, imu, scene, scene_render) must not import SDK, GUI, ROS, YOLO or Open3D.
+- Core modules (models, geometry, analysis, storage, tracking, imu, scene, scene_render, odometry, mapping) must not import SDK, GUI, ROS, YOLO or Open3D.
 - Keep hardware access in sdk.py, model inference in detection.py, UI in viewer.py and ROS integration in ros2/.
 - All core lengths are meters, timestamps milliseconds, RGB arrays RGB uint8. Optical axes: x right, y down, z forward.
 - Missing depth is unknown. Never convert it to zero obstacle distance or free space.

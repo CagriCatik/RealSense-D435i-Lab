@@ -15,6 +15,11 @@ Ziel: dieselben Algorithmen mit Livekamera, synthetischen Daten und Wiedergabe b
 | scene_render | Segmentraster in RGB-Farben umsetzen | Nein |
 | scene_io | Zusammengehörige Scene-JSON-/NPZ-/PLY-Ausgabe | Dateisystem |
 | scene_view | Objektboxen und Kennzahlen zeichnen | OpenCV |
+| odometry | Projektive geometrische Registrierung und Qualitätsgates | Nein |
+| mapping | Poseverkettung, Trackingzustand und begrenzte Voxelkarte | Nein |
+| room_demo | Ray-cast-Sequenz mit unabhängigen Sollposen | Nein |
+| mapping_app | Aufnahmen, Journal, Trajektorie, Manifest und Kartenexport | Dateisystem |
+| mapping_view | Optionale X/Z-Kartenvorschau | OpenCV |
 | sdk | Gerätesuche, RGB-D, Filter, IR, Motion und native Aufnahme | pyrealsense2 |
 | detection | YOLO-Inferenz und RGB/BGR-Übergang | Ultralytics |
 | viewer | Darstellung, Tastatur und Mausinteraktion | OpenCV |

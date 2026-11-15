@@ -24,7 +24,7 @@ def source_arguments(parser, count=300):
     parser.add_argument("--input", help="Replay directory/.npz or SDK recording")
     parser.add_argument("--config", help="Strict JSON config; see configs/")
     parser.add_argument("--frames", type=positive, default=count)
-    parser.add_argument("--demo-scene", choices=("box", "tabletop"), help="Synthetic scene (default depends on command)")
+    parser.add_argument("--demo-scene", choices=("box", "tabletop", "room"), help="Synthetic scene (default depends on command)")
 
 
 def parser():
@@ -47,6 +47,11 @@ def parser():
     scene.add_argument("--output", help="New directory for paired scene JSON + RGB-D snapshots")
     scene.add_argument("--baseline", help="Previously exported scene JSON, same stationary setup")
     scene.add_argument("--export-cloud", action="store_true", help="Export colored object points per frame")
+    mapping = sub.add_parser("map", help="Local depth odometry, voxel mapping and trajectory export")
+    source_arguments(mapping, 30)
+    mapping.add_argument("--mapping-config")
+    mapping.add_argument("--output", required=True, help="New mapping session directory")
+    mapping.add_argument("--preview", action="store_true", help="Optional desktop RGB/map preview")
     capture = sub.add_parser("capture", help="Save aligned portable RGB-D snapshots")
     source_arguments(capture)
     capture.add_argument("--output", required=True)
@@ -78,8 +83,13 @@ def make_source(args, config):
     if args.source == "demo":
         if args.input:
             raise ValueError("--input is only valid for replay/native")
-        name = args.demo_scene or ("tabletop" if args.command == "scene" or getattr(args, "scene", False) else "box")
-        factory = TabletopSource if name == "tabletop" else SyntheticSource
+        name = args.demo_scene or ("room" if args.command == "map" else
+                                  "tabletop" if args.command == "scene" or getattr(args, "scene", False) else "box")
+        if name == "room":
+            from .room_demo import MovingRoomSource
+            factory = MovingRoomSource
+        else:
+            factory = TabletopSource if name == "tabletop" else SyntheticSource
         return factory(args.frames, config.color_width, config.color_height, config.fps)
     if args.source == "replay":
         if not args.input:
@@ -171,6 +181,23 @@ def process_frames(args):
 
 
 def run(args):
+    if args.command == "map":
+        from .mapping_app import map_session
+        from .odometry import MappingConfig
+        config = Config.load(args.config)
+        mapping_config = MappingConfig.load(args.mapping_config)
+        preview = None
+        if args.preview:
+            from .mapping_view import MapPreview
+            preview = MapPreview()
+        try:
+            with make_source(args, config) as source:
+                result = map_session(source, args.output, mapping_config, args.frames, preview)
+            emit({key: value for key, value in result.items() if key != "trajectory"})
+            return 0 if result["status"] == "completed" else 2
+        finally:
+            if preview is not None:
+                preview.close()
     if args.command == "inspect":
         from .sdk import inspect_devices
         result = inspect_devices()
