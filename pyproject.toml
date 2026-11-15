@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "realsense-d435i-lab"
+version = "0.1.0"
+description = "Specification-traceable RGB-D and IMU experiments for the RealSense D435i"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<3"]
+
+[project.optional-dependencies]
+viewer = ["opencv-python>=4.8,<5"]
+camera = ["pyrealsense2>=2.55,<3"]
+yolo = ["ultralytics>=8.3,<9", "opencv-python>=4.8,<5"]
+scan = ["open3d>=0.18,<1"]
+
+[project.scripts]
+rs-lab = "realsense_lab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

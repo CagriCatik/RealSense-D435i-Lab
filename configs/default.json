@@ -1,0 +1,13 @@
+{
+  "depth_width": 848,
+  "depth_height": 480,
+  "color_width": 640,
+  "color_height": 480,
+  "fps": 30,
+  "min_depth_m": 0.3,
+  "max_depth_m": 3.0,
+  "spatial": true,
+  "temporal": false,
+  "hole_filling": false,
+  "serial": ""
+}

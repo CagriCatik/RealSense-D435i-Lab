@@ -1,0 +1,7 @@
+{
+  "spatial": false,
+  "temporal": false,
+  "hole_filling": false,
+  "min_depth_m": 0.1,
+  "max_depth_m": 10.0
+}
