@@ -34,6 +34,10 @@ H16: Kamera fest montieren, freie Referenz-ROI wählen, geeignete Körper mit un
 
 H17: Kamera langsam durch eine statische geometrisch vielfältige Referenzszene bewegen; `map` mit Aufzeichnung/Journal ausführen. Kamera-/Weltachsen und Maßstab prüfen. Bekannte kurze Wege und Rückkehr zum Start unabhängig vermessen, Drift/Verluste berichten. Einzelwand, fehlende Tiefe, schnelle Bewegung und Zeitfehler prüfen: nach erkanntem Verlust keine weitere Fusion oder aktuelle Weltpose. Teilkarte/Journal und deterministische Wiedergabe vergleichen. ROS-/RTAB-Map-Einstieg separat mit TF/QoS/IMU und neuer Datenbank abnehmen. Noch keine Freigabe für autonome Navigation.
 
+## V3: semantische Objektkarte
+
+H18: Ein festgehaltenes lokales Modell mit bekannten statischen Gegenständen verwenden. Klassen, Box-/Maskenzuordnung und räumliche Positionen unabhängig prüfen. Gleiche Klasse an mehreren Positionen, Verdeckung, fehlende Tiefe und Kamerabewegung testen. Quellenbilder/Posen/Detektionsindizes pro Objekt prüfen; danach ohne Modell aus dem Journal wiedergeben. Veränderte Bilddaten müssen abgewiesen werden. Trackingverlust darf keine neuen Objektbeobachtungen erzeugen. Modellfehler, Posefehler und Identitätsfehler getrennt berichten. Synthetische Fixture-Erkennung ist kein Ersatz für diesen Versuch. Abnahme offen.
+
 ## Tiefenqualität sauber bewerten
 
 Kamera und Ziel fixieren. Eine ausreichend große ebene, geeignete Oberfläche und ein nachvollziehbares Referenzmessmittel verwenden. Abstand auf das definierte Kamera-/Sensorkoordinatensystem beziehen. ROI und mindestens einige hundert Frames pro Bedingung archivieren. Bias = mittlere/mediane gemessene Z minus Referenz-Z; relative Abweichung = Betrag(Bias)/Referenz-Z. Zeitliche Streuung und räumliche Ebenenabweichung getrennt berichten. Die Nachbarschafts-MAD im Explorer ist weder diese gesamte Prüfung noch eine kalibrierte Messunsicherheit.

@@ -1,0 +1,15 @@
+{
+  "confidence": 0.5,
+  "stride": 4,
+  "min_points": 12,
+  "max_depth_m": 3.0,
+  "box_margin": 0.15,
+  "depth_band_m": 0.025,
+  "max_depth_mad_m": 0.08,
+  "association_m": 0.25,
+  "duplicate_iou": 0.6,
+  "min_observations": 3,
+  "max_landmarks": 1000,
+  "history_limit": 100,
+  "excluded_labels": ["person"]
+}

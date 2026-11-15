@@ -7,7 +7,8 @@
 | inspect | Geräte, Firmware, USB-Modus, Sensorprofile, Intrinsics und Optionsbereiche als JSON |
 | view | Explorer mit Messung; optional YOLO und metrische Track-IDs |
 | scene | Stationäre Referenzfläche, Objektsegmentierung und Vergleich; JSON-/NPZ-/PLY-Sitzung |
-| map | Lokale Tiefenodometrie, farbige Voxelkarte, Trajektorie und Diagnosejournal |
+| map | Lokale Tiefenodometrie, farbige Voxelkarte, Trajektorie; optional V3-Semantik |
+| objects | Klassen-/Status-/Beobachtungsfilter für eine exportierte Objektkarte |
 | infrared | Linkes/rechtes natives IR-Bild; eigene Kamerasitzung |
 | capture | Ausgerichtete RGB-D-Snapshots; optional zusätzlich native SDK-Aufnahme |
 | analyze | Erste Szene: Tiefenstatistik, sichtbare Ausdehnung, dominante Ebene, optionale Punktmessung |
@@ -44,5 +45,7 @@ JSON mit strikter Schlüssel-/Typprüfung. `default.json` aktiviert räumliche G
 Kameraablauf: RGB-Ausrichtung → Threshold → optional Disparität → Spatial → Temporal → Tiefe → optional Hole Filling. Diese einfache Reihenfolge ist implementiert; in Qualitätsversuchen mit nativer Tiefenfilterung vor Ausrichtung vergleichen. Demo/portable Wiedergabe nutzen ihre vorhandenen Tiefendaten unverändert; SDK-Filter laufen nur auf SDK-Quellen. `max_depth_m` begrenzt zusätzlich Analyse und Punktwolkenexport; der Viewer skaliert seine Farbkarte damit.
 
 `map --output` erwartet ein neues Sitzungsverzeichnis; `--mapping-config` steuert Odometrie/Fusion, `--preview` aktiviert den optionalen Desktop. Trackingverlust erhält Teilkarte/Journal, beendet aber die Fusion und liefert Exitcode 2. [V2-Anleitung](mobile-mapping.md)
+
+`map --semantic` ergänzt Landmarken. Kamera/native benötigen `--weights` oder `--detections`; Demo nutzt einen markierten Farbdaten-Fixture. Replay kann `detections.jsonl` automatisch neben der Aufnahme finden. Modell und Journal schließen sich aus. `--semantic-config` ist getrennt von `--mapping-config`. `objects --input DATEI --label KLASSE --confirmed --min-observations 3` filtert den Bericht; `--details` zeigt zusätzliche Historie/Statistik. [V3-Anleitung](semantic-mapping.md)
 
 Exitcodes: 0 Erfolg, 2 Eingabe-/Gerätefehler, keine Kamera bei inspect oder erkannter Trackingverlust beim Mapping, 130 Unterbrechung. GUI-Fehler ohne Desktop lassen sich nicht auf allen OpenCV-Builds als Python-Ausnahme behandeln.

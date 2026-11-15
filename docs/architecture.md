@@ -19,7 +19,11 @@ Ziel: dieselben Algorithmen mit Livekamera, synthetischen Daten und Wiedergabe b
 | mapping | Poseverkettung, Trackingzustand und begrenzte Voxelkarte | Nein |
 | room_demo | Ray-cast-Sequenz mit unabhängigen Sollposen | Nein |
 | mapping_app | Aufnahmen, Journal, Trajektorie, Manifest und Kartenexport | Dateisystem |
-| mapping_view | Optionale X/Z-Kartenvorschau | OpenCV |
+| mapping_view | Optionale X/Z-Kartenvorschau mit Objektmarkern | OpenCV |
+| semantic_geometry | Detektionsprüfung, Masken-/Boxlokalisation und sichtbare Weltpunkte | Nein |
+| semantic_map | Statische Landmarken, eins-zu-eins-Zuordnung, Statistik und Abfrage | Nein |
+| semantic_sources | Klar markierter Demodetektor und exakter Detektions-Replay | Dateisystem/Hash |
+| semantic_app | Detektorwahl, Journale, JSON-/CSV-/PLY-Export | Adapter orchestrieren |
 | sdk | Gerätesuche, RGB-D, Filter, IR, Motion und native Aufnahme | pyrealsense2 |
 | detection | YOLO-Inferenz und RGB/BGR-Übergang | Ultralytics |
 | viewer | Darstellung, Tastatur und Mausinteraktion | OpenCV |

@@ -17,6 +17,6 @@ Die erste Version enthält eine ausführbare Basis. Die folgenden Arbeitspakete 
 | R11 Robotik | Costmap-Anbindung, Odometrie/LiDAR-Fusion, später Navigation | Erst Wiedergabe/Simulation, dann kontrollierter Hardwareversuch |
 | R12 Mehrkamera | Extrinsische Kalibrierung, Synchronisation, USB-Budget, Punktwolkenfusion | Zusatzhardware, elektrische Synchronisationsbedingungen und Zeitfehler geprüft |
 
-Die zusammenhängende Anwendung startet mit [V1: stationärer Szeneninspektor](scene-inspector.md). V1-Software ist implementiert, reale Kamera-/Desktop-Abnahme bleibt offen. [V2](mobile-mapping.md) enthält lokale Tiefenodometrie, Kamerapose, farbige Voxelkarte und einen ROS-/RTAB-Map-Einstieg; reale Abnahme und globale Robustheit bleiben offen. V3 ergänzt eine semantische Objektkarte und V4 Robotikwahrnehmung.
+Die zusammenhängende Anwendung startet mit [V1: stationärer Szeneninspektor](scene-inspector.md). V1-Software ist implementiert, reale Kamera-/Desktop-Abnahme bleibt offen. [V2](mobile-mapping.md) enthält lokale Tiefenodometrie, Kamerapose, farbige Voxelkarte und einen ROS-/RTAB-Map-Einstieg; reale Abnahme und globale Robustheit bleiben offen. [V3](semantic-mapping.md) ergänzt eine statische semantische Objektkarte mit Quellenbezug, Fingerabdruck-Replay und Abfrage. Reale Modell-/Identitätsqualität bleibt offen; V4 ergänzt Robotikwahrnehmung.
 
 Empfohlene Reihenfolge für Çağrı: R1 → R2/R3 → R4 → R6 → R8 → R10. Das verbindet deine Computer-Vision-Arbeit früh mit deiner ROS-2-Robotik. R5 und R9 sind eigene, gut vorzeigbare Mess-/Scanprojekte.

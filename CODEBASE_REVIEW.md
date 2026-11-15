@@ -1,4 +1,4 @@
-# Entwicklungsprüfung 0.3.0
+# Entwicklungsprüfung 0.4.0
 
 ## Ergebnis
 
@@ -11,6 +11,10 @@ Neu: stationäre Referenzkalibrierung, Objektcluster mit 3D-Nachbarschaftsgate, 
 ## V2 lokale Kartierung
 
 Neu sind geometrische projektive point-to-plane-Odometrie, beobachtbarkeits-/residuen-/bewegungsabhängige Annahme, inverse Poseverkettung, farbige Voxelmittelung mit Kapazitätsgrenze und ein verriegelter Trackingverlust-Zustand. Die Raumdemo liefert unabhängige Sollposen; diese werden nicht in die Verarbeitung eingespeist. Automatische Tests prüfen die Schätzung, Rotations-/Translationsverkettung, Einzelwand-Degeneration, Zeitfehler, Kapazitätsfehler, Journal/Manifest und Replay. Die Karten-Vorschau wird an einer simulierten UI-Grenze geprüft. Ein eigener ROS-Launch für Kamera/IMU/RTAB-Map wird nur syntaktisch geprüft. Das NumPy-Verfahren verwendet Tiefe, nicht RGB-Photometrie, und hat weder Loop Closure noch IMU-Fusion oder globale Optimierung. Reale Drift-/Robustheitsnachweise bleiben offen.
+
+## V3 semantische Objektkarte und README
+
+V3 lokalisiert Detektionen in Maskenpolygonen oder inneren Boxregionen, filtert Tiefe und transformiert sichtbare Punkte mit akzeptierten Kameraposen. Statische Landmarken werden klassen-/distanzabhängig eins-zu-eins zugeordnet. Tests prüfen Trennung gleicher Klassen, bewegte Kamera bei gleichem Weltobjekt, ungültige/gemischte Tiefe, Klassen-/Konfidenz-/Duplikatgates, Historien- und Kapazitätsgrenzen sowie Abfrage/Export. Frame-Fingerabdrücke verhindern stillen Replay mit geänderten RGB-D-Daten. Die Modell-API-Grenze wird simuliert geprüft; die komplette Demo verwendet ausdrücklich bekannte synthetische Farben statt eines trainierten Modells. Reale Detektion, Posefehler und schwierige Identitäten bleiben offen. Das README enthält einen dynamischen Workflow-Badge, deklarierte Versions-/Ziel-/Lizenz-/Hardware-Badges sowie eine regenerierbare Abbildung der ausgeführten Demo.
 
 ## Geprüfter Umfang
 

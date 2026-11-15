@@ -38,3 +38,7 @@ Keine Hindernisfreiheit aus schwarzen Tiefenpixeln ableiten; fehlende Messung bl
 ## Weiter
 
 [Vorheriges Thema](../14_ros2/TUTORIAL.md) · [Nächstes Thema](../16_benchmarks/TUTORIAL.md) · [Index](../../TUTORIAL_INDEX.md)
+
+## V3-Erweiterung
+
+`rs-lab map --semantic --frames 12 --output recordings/semantic-demo-001` verbindet Detektion, Kamerapose und statische Objektlandmarken. Die Demo verwendet bekannte Farben; reale Inferenz benötigt ein lokales Modell. Klassen-/Distanzzuordnung, Quellenbezug, Fingerabdruck-Replay und `objects`-Abfrage stehen in der [V3-Anleitung](../../docs/semantic-mapping.md). Diese Karten-IDs sind von den kamerarelativ bewegten Tracks im bisherigen Explorer getrennt.

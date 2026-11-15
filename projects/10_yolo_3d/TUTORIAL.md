@@ -35,3 +35,7 @@ Kein gültiger Tiefenwert: depth unknown; Klassifikation und Distanzqualität ge
 ## Weiter
 
 [Vorheriges Thema](../09_object_dimensions/TUTORIAL.md) · [Nächstes Thema](../11_tracking/TUTORIAL.md) · [Index](../../TUTORIAL_INDEX.md)
+
+## V3-Erweiterung
+
+`rs-lab map --semantic --frames 12 --output recordings/semantic-demo-001` verbindet Detektion, Kamerapose und statische Objektlandmarken. Die Demo verwendet bekannte Farben; reale Inferenz benötigt ein lokales Modell. Klassen-/Distanzzuordnung, Quellenbezug, Fingerabdruck-Replay und `objects`-Abfrage stehen in der [V3-Anleitung](../../docs/semantic-mapping.md). Diese Karten-IDs sind von den kamerarelativ bewegten Tracks im bisherigen Explorer getrennt.

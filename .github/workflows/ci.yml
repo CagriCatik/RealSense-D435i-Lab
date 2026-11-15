@@ -27,6 +27,9 @@ jobs:
       - run: rs-lab scene --source replay --input artifacts/scene --frames 3 --baseline artifacts/scene/scene_000000.json --output artifacts/scene-compare
       - run: rs-lab map --source demo --frames 5 --output artifacts/map
       - run: rs-lab map --source replay --input artifacts/map --frames 5 --output artifacts/map-replay
+      - run: rs-lab map --source demo --semantic --frames 5 --output artifacts/semantic
+      - run: rs-lab map --source replay --input artifacts/semantic --semantic --frames 5 --output artifacts/semantic-replay
+      - run: rs-lab objects --input artifacts/semantic/semantic_map.json --confirmed --output artifacts/object-query.json
       - uses: actions/upload-artifact@v4
         with:
           name: demo-python-${{ matrix.python }}

@@ -1,6 +1,6 @@
 # Funktionsmatrix
 
-Stand 0.3.0. **Kern geprüft** heißt: automatischer Test mit synthetischen Daten. **Adapter vorhanden** heißt: ausführbarer Integrationscode, noch keine Hardware-/Desktop-/Modellabnahme. Kein Eintrag ist derzeit an einer physischen D435i in dieser Entwicklungsumgebung abgenommen.
+Stand 0.4.0. **Kern geprüft** heißt: automatischer Test mit synthetischen Daten. **Adapter vorhanden** heißt: ausführbarer Integrationscode, noch keine Hardware-/Desktop-/Modellabnahme. Kein Eintrag ist derzeit an einer physischen D435i in dieser Entwicklungsumgebung abgenommen.
 
 | Funktion | Umsetzung | Softwareprüfung | Hardware/Integration | Referenz |
 |---|---|---|---|---|
@@ -27,7 +27,9 @@ Stand 0.3.0. **Kern geprüft** heißt: automatischer Test mit synthetischen Date
 | Sichtbare XYZ-Ausdehnung | `analyze` | Kern geprüft | Keine vollständige Objektvermessung | Eigenes Verfahren |
 | Referenzgestützte sichtbare Objektmaße | `scene` / `view --scene`: feste Ebene, 3D-Cluster, Position/Ausdehnung/Höhe | Synthetische Numerik, Replay und UI-Grenze geprüft | Reale Referenzkörper/GUI offen; keine vollständigen Körpermaße | Eigenes Verfahren |
 | Szenenvergleich | Einmalige geometrische Baseline-Zuordnung, signierte Messwertdifferenzen | Zuordnung/Fehlerfälle geprüft | Unveränderter Kameraaufbau erforderlich | Eigenes Verfahren |
-| YOLO + räumliche Position | Lokales Modell + Median am Boxzentrum | Inferenzadapter vorhanden | Modell/GPU/Live offen | S14 |
+| YOLO + räumliche Position | Explorer mit Zentrum; V3 mit Maskenpolygon oder innerer Box und Tiefenfilter | Adapter-/RGB-BGR-/Polygon-Grenze simuliert geprüft | Modell/GPU/Live offen | S14, S17 |
+| Semantische Objektkarte | `map --semantic`: Weltpositionen, Klassen-/Distanzgates, Sitzungs-IDs, wiederholte Beobachtungen | Starre Transformation, Kamerawechsel, Zuordnung, Tiefe und Historienspeicher geprüft | Reale Objektqualität/Drift/Identität offen | Eigenes Verfahren |
+| Semantik-Replay und Abfrage | Detektions-/Beobachtungsjournal, Frame-Fingerabdruck, JSON/CSV/PLY und `objects` | Demo-Replay, Inhaltsänderung, Export/Abfrage geprüft | Kein trainiertes Modell im synthetischen Nachweis | Eigene Formate |
 | Metrisches Objekttracking | Klassen-Gate + Greedy-Zuordnung | ID/Gates/Zeitsprünge geprüft | Kamerabewegung nicht kompensiert | Eigenes Verfahren |
 | IMU-Bias-/Rauschdiagnose | Stationäre CSV-Auswertung | Kern geprüft | Stationarität/Kalibrierung offen | S4 |
 | IMU-Orientierungsfusion / VIO | Geplant | Nicht implementiert | Offen | S4 |

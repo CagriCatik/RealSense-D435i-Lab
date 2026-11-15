@@ -52,6 +52,18 @@ def parser():
     mapping.add_argument("--mapping-config")
     mapping.add_argument("--output", required=True, help="New mapping session directory")
     mapping.add_argument("--preview", action="store_true", help="Optional desktop RGB/map preview")
+    mapping.add_argument("--semantic", action="store_true", help="V3 static semantic object landmarks")
+    mapping.add_argument("--semantic-config")
+    detector = mapping.add_mutually_exclusive_group()
+    detector.add_argument("--weights", help="Existing local YOLO detection/segmentation weights")
+    detector.add_argument("--detections", help="Recorded detections.jsonl for exact-frame replay")
+    objects = sub.add_parser("objects", help="Query an exported semantic object map")
+    objects.add_argument("--input", required=True)
+    objects.add_argument("--label")
+    objects.add_argument("--min-observations", type=positive, default=1)
+    objects.add_argument("--confirmed", action="store_true")
+    objects.add_argument("--details", action="store_true", help="Include observation history and scatter")
+    objects.add_argument("--output")
     capture = sub.add_parser("capture", help="Save aligned portable RGB-D snapshots")
     source_arguments(capture)
     capture.add_argument("--output", required=True)
@@ -181,18 +193,33 @@ def process_frames(args):
 
 
 def run(args):
+    if args.command == "objects":
+        from .semantic_map import query_objects
+        report = json.loads(Path(args.input).read_text(encoding="utf-8"))
+        selected = query_objects(report, args.label, args.min_observations, args.confirmed)
+        if not args.details:
+            keys = ("object_id", "label", "status", "xyz_world_m", "observation_count", "mean_detection_confidence")
+            selected = [{key: obj[key] for key in keys} for obj in selected]
+        emit({"count": len(selected), "objects": selected}, args.output)
+        return 0
     if args.command == "map":
         from .mapping_app import map_session
         from .odometry import MappingConfig
         config = Config.load(args.config)
         mapping_config = MappingConfig.load(args.mapping_config)
+        if not args.semantic and (args.weights or args.detections or args.semantic_config):
+            raise ValueError("--weights/--detections/--semantic-config require --semantic")
+        semantic = None
+        if args.semantic:
+            from .semantic_app import make_semantic_session
+            semantic = make_semantic_session(args)
         preview = None
         if args.preview:
             from .mapping_view import MapPreview
             preview = MapPreview()
         try:
             with make_source(args, config) as source:
-                result = map_session(source, args.output, mapping_config, args.frames, preview)
+                result = map_session(source, args.output, mapping_config, args.frames, preview, semantic)
             emit({key: value for key, value in result.items() if key != "trajectory"})
             return 0 if result["status"] == "completed" else 2
         finally:

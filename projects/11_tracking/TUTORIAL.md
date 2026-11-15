@@ -35,3 +35,7 @@ ID-Wechsel bei Verdeckung ist eine bekannte Grenze; kein Re-ID-/Kalman-/Welttrac
 ## Weiter
 
 [Vorheriges Thema](../10_yolo_3d/TUTORIAL.md) · [Nächstes Thema](../12_imu/TUTORIAL.md) · [Index](../../TUTORIAL_INDEX.md)
+
+## V3-Erweiterung
+
+`rs-lab map --semantic --frames 12 --output recordings/semantic-demo-001` verbindet Detektion, Kamerapose und statische Objektlandmarken. Die Demo verwendet bekannte Farben; reale Inferenz benötigt ein lokales Modell. Klassen-/Distanzzuordnung, Quellenbezug, Fingerabdruck-Replay und `objects`-Abfrage stehen in der [V3-Anleitung](../../docs/semantic-mapping.md). Diese Karten-IDs sind von den kamerarelativ bewegten Tracks im bisherigen Explorer getrennt.

@@ -1,9 +1,15 @@
 from pathlib import Path
 import re
 import unittest
+import xml.etree.ElementTree as ET
 
 
 class DocumentationTests(unittest.TestCase):
+    def test_readme_demo_svg_is_well_formed(self):
+        root = Path(__file__).resolve().parents[1]
+        document = ET.parse(root/"docs"/"assets"/"semantic-demo.svg")
+        self.assertEqual(document.getroot().tag, "{http://www.w3.org/2000/svg}svg")
+
     def test_local_markdown_links_resolve(self):
         root = Path(__file__).resolve().parents[1]
         paths = [root/"README.md", root/"TUTORIAL_INDEX.md"]

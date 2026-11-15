@@ -7,24 +7,32 @@ from .mapping import LocalMapper
 from .storage import save_frame, write_json, write_ply
 
 
-def map_session(source, output, config, count, preview=None):
+def map_session(source, output, config, count, preview=None, semantic=None):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     mapper, entries, accepted = LocalMapper(config), [], []
-    with (output/"tracking.jsonl").open("x", encoding="utf-8") as journal:
-        for index, frame in enumerate(source):
-            filename = f"frame_{index:06d}.npz"
-            save_frame(output/filename, frame)
-            entry = dict(mapper.update(frame), file=filename)
-            journal.write(json.dumps(entry, allow_nan=False)+"\n")
-            journal.flush()
-            entries.append(entry)
-            if entry["camera_to_world"] is not None:
-                accepted.append({"file": filename, "camera_to_world": entry["camera_to_world"]})
-            if preview is not None and not preview(frame, mapper, entry):
-                break
-            if index+1 >= count:
-                break
+    try:
+        if semantic is not None:
+            semantic.start(output)
+        with (output/"tracking.jsonl").open("x", encoding="utf-8") as journal:
+            for index, frame in enumerate(source):
+                filename = f"frame_{index:06d}.npz"
+                save_frame(output/filename, frame)
+                entry = dict(mapper.update(frame), file=filename)
+                if semantic is not None:
+                    entry["semantic"] = semantic.process(frame, entry, filename)
+                journal.write(json.dumps(entry, allow_nan=False)+"\n")
+                journal.flush()
+                entries.append(entry)
+                if entry["camera_to_world"] is not None:
+                    accepted.append({"file": filename, "camera_to_world": entry["camera_to_world"]})
+                if preview is not None and not preview(frame, mapper, entry):
+                    break
+                if index+1 >= count:
+                    break
+    finally:
+        if semantic is not None:
+            semantic.close()
     if not entries:
         raise ValueError("Mapping source produced no frames")
     xyz, colors = mapper.map.cloud()
@@ -36,5 +44,7 @@ def map_session(source, output, config, count, preview=None):
                "frames": len(entries), "accepted_frames": len(accepted),
                "map_voxels": len(xyz), "settings": asdict(config), "trajectory": entries,
                "limits": "Local depth odometry. Drift, no loop closure, no automatic recovery, no IMU fusion."}
+    if semantic is not None:
+        summary["semantic"] = semantic.finish(summary["status"])
     write_json(output/"trajectory.json", summary)
     return summary

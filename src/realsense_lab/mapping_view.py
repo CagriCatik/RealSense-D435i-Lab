@@ -9,6 +9,7 @@ class MapPreview:
         self.cv = cv_module()
         self.title = "D435i Local Mapping | RGB - map X/Z | Q stop"
         self.path = []
+        self.objects = {}
 
     def __call__(self, frame, mapper, entry):
         cv = self.cv
@@ -31,7 +32,20 @@ class MapPreview:
             for a, b in zip(path, path[1:]):
                 cv.line(panel, tuple(a), tuple(b), (20, 220, 240), 2)
             cv.circle(panel, tuple(path[-1]), 4, (20, 220, 240), -1)
-        image = np.hstack((frame.color[..., ::-1].copy(), panel))
+        camera = frame.color[..., ::-1].copy()
+        for observation in entry.get("semantic", {}).get("observations", []):
+            self.objects[observation["object_id"]] = observation
+            x0, y0, x1, y1 = map(int, observation["xyxy"])
+            cv.rectangle(camera, (x0, y0), (x1, y1), (80, 220, 180), 2)
+            cv.putText(camera, f"{observation['object_id']} {observation['label']}", (x0, max(42, y0-5)),
+                       cv.FONT_HERSHEY_SIMPLEX, .4, (80, 220, 180), 1)
+        for object_id, observation in self.objects.items():
+            location = tuple(pixels(np.array([observation["object_xyz_world_m"]]))[0])
+            color = (180, 210, 70) if observation["object_status"] == "confirmed" else (60, 180, 240)
+            cv.circle(panel, location, 6, color, 2)
+            cv.putText(panel, f"{object_id.rsplit('-', 1)[-1]} {observation['label']}",
+                       (location[0]+8, location[1]), cv.FONT_HERSHEY_SIMPLEX, .4, color, 1)
+        image = np.hstack((camera, panel))
         text = f"{entry['status']} | {entry['diagnostic']['reason']} | {len(xyz)} voxels"
         color = (30, 30, 255) if entry["status"] == "lost" else (240, 240, 240)
         cv.putText(image, text, (10, 23), cv.FONT_HERSHEY_SIMPLEX, .55, color, 2)

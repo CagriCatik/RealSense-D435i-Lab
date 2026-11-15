@@ -19,6 +19,7 @@ Quellenprüfung: 15.11.2026. Verweise auf `master`/`ros2-master` sind beweglich;
 | S13 | [Mehrkamera-Whitepaper](https://www.intel.com/content/dam/support/us/en/documents/emerging-technologies/intel-realsense-technology/RealSense_Multiple_Camera_WhitePaper.pdf) | Mehrkamera, Bandbreite und Synchronisation |
 | S14 | [Ultralytics Predict](https://docs.ultralytics.com/modes/predict/) | BGR-NumPy-Eingabe und Box-Ergebnisse |
 | S15 | [Open3D RGB-D Integration](https://www.open3d.org/docs/release/tutorial/pipelines/rgbd_integration.html) | TSDF mit bekannten Posen; lokal noch nicht integriert geprüft |
-| S16 | [RTAB-Map ROS](https://github.com/introlab/rtabmap_ros) | Geplanter externer SLAM-Backend |
+| S16 | [RTAB-Map ROS](https://github.com/introlab/rtabmap_ros) | Externer SLAM-Einstieg; Integration offen |
+| S17 | [Ultralytics Results/Masks](https://docs.ultralytics.com/reference/engine/results/) | Box-/Maskenergebnisse; Polygone in Originalbildkoordinaten |
 
 Herstellerdokumentation ist die Referenz für Kamerafunktionen. YOLO, Tracking, TSDF, SLAM und Robotiknavigation sind zusätzliche Softwareanwendungen; ihre Qualität ist keine zugesicherte Kamerafunktion. Die Open3D-Tutorialseite war bei der Quellenprüfung nicht abrufbar; API und Integration müssen mit installierter Open3D-Version nochmals geprüft werden.
